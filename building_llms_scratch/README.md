@@ -1,0 +1,1 @@
+this directory contains codes of the building LLMs from scratch book aiming to cover details of LLMs and foundation codes for building LLMs from scratch.
