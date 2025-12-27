@@ -24,7 +24,7 @@ class SimpleTokenizer:
     
     def build_tokenizer(self, corpus_path: str) -> None:
         def _tokenize_text(full_text):
-            splitted_corpus = re.split(r'([,.:;?_!"()\']|--|\s)', full_text) ## pattern from the book
+            splitted_corpus = re.split(r'([,.:;?_!"()\']|--|\s)', full_text) ## pattern from the book ## regex101 check https://regex101.com/
             return [token.strip() for token in splitted_corpus if token.strip()]
         
         def _build_tokenmap(tokens: List[str]):
