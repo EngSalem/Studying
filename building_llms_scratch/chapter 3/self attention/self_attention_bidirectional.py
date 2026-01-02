@@ -24,7 +24,7 @@ class selfAttentionBidirectional(nn.Module):
         attn_scores = q_w @ k_w.transpose(1, 2) # B x S x S
 
         # apply softmax to get attention weights
-        attn_weights = F.softmax(attn_scores, dim = -1) # B x S x S
+        attn_weights = F.softmax(attn_scores/k_w.shape[-1]**0.5, dim = -1) # B x S x S
 
         # multiply attention weights with values to get output vectors
 
