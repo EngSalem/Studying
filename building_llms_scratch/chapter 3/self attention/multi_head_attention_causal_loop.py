@@ -24,7 +24,7 @@ class MultiHeadAttentionCausal(nn.Module):
     def forward(self, x):
         # get x shape
         batch_size, seq_length, dim_in = x.shape  # B x S x dim_in
-        heads_output = torch.concat(
+        heads_output = torch.cat(
             [head(x) for head in self.multiheads], dim=-1
         )  # B x S x dim_out
         out = self.linear(heads_output)  # B x S x dim_out
