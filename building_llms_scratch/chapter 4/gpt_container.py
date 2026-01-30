@@ -9,6 +9,14 @@ class DummyLayerNorm(nn.Module):
 
     def forward(self, x): ## does nothing for now
         return x    
+    
+class DummyTransformerBlock(nn.Module):
+    def __init__(self, config: dict):
+        super(DummyTransformerBlock, self).__init__()
+        self.config = config
+
+    def forward(self, x):
+        return x  ## does nothing for now    
 
 class GPTContainer(nn.Module):
     def __init__(self,config: dict):
@@ -17,13 +25,7 @@ class GPTContainer(nn.Module):
         self.token_embedding = nn.Embedding(config['vocab_size'], config['embed_dim'])
         self.position_embedding = nn.Embedding(config['max_seq_len'], config['embed_dim'])
         self.final_layer_norm = DummyLayerNorm(config['embed_dim']) # Dummy LayerNorm as placeholder
-        self.transoformer_blocks = nn.Sequential([MultiHeadAttentionCausal(
-            dim_in=config['embed_dim'],
-            dim_out=config['embed_dim'],
-            seq_len=config['max_seq_len'],
-            num_heads=config['num_heads'],
-            qkv_bias=config.get('qkv_bias', False),
-            dropout=config.get('dropout', 0.1)
+        self.transoformer_blocks = nn.Sequential([DummyTransformerBlock(config
         ) for _ in range(config['num_layers'])])
 
         self.projection_head = nn.Linear(config['embed_dim'], config['vocab_size'], bias=False) 
