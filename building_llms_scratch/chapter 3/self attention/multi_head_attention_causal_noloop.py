@@ -7,6 +7,7 @@ class MultiHeadAttentionCausal(nn.Module):
         super(MultiHeadAttentionCausal, self).__init__()
         # dimensions and parameters
         self.head_dim = dim_out // num_heads
+        self.dim_out = dim_out
         self.num_heads = num_heads
         self.scale = self.head_dim ** -0.5
         self.seq_len = seq_len
@@ -43,7 +44,7 @@ class MultiHeadAttentionCausal(nn.Module):
         attention_weights = self.attn_drop(attention_weights)
 
         out = attention_weights @ v.transpose(1,2)  # (B, num_heads, T, head_dim)
-        context_vector = out.transpose(1,2).contiguous().view(B, T, dim_out)
+        context_vector = out.transpose(1,2).contiguous().view(B, T, self.dim_out)
 
         # apply projection [optional]
         context_vector = self.proj(context_vector)
