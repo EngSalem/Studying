@@ -9,7 +9,23 @@ class DummyLayerNorm(nn.Module):
 
     def forward(self, x): ## does nothing for now
         return x    
-    
+
+class LayerNorm(nn.Module):
+    def __init__(self, emb_dim):
+        super(LayerNorm, self).__init__()
+        self.emb_dim = emb_dim
+        self.eps = 1e-5
+        self.scale = nn.Parameter(torch.ones(emb_dim))
+        self.shift = nn.Parameter(torch.zeros(emb_dim))
+    def forward(self, x):
+        ##
+        # apply normalization with biased variance and mean
+        # #    
+        mean = x.mean(dim=-1, keepdim=True)
+        var = x.var(dim=-1, keepdim=True, unbiased=False)
+        x_norm = (x - mean) / torch.sqrt(var + self.eps)
+        return self.scale * x_norm + self.shift ## helps network learn optimal scale and shift for normalized output
+
 class DummyTransformerBlock(nn.Module):
     def __init__(self, config: dict):
         super(DummyTransformerBlock, self).__init__()
@@ -24,7 +40,7 @@ class GPTContainer(nn.Module):
         self.config = config
         self.token_embedding = nn.Embedding(config['vocab_size'], config['embed_dim'])
         self.position_embedding = nn.Embedding(config['max_seq_len'], config['embed_dim'])
-        self.final_layer_norm = DummyLayerNorm(config['embed_dim']) # Dummy LayerNorm as placeholder
+        self.final_layer_norm = LayerNorm(config['embed_dim']) # Use the implemented LayerNorm
         self.transoformer_blocks = nn.Sequential([DummyTransformerBlock(config
         ) for _ in range(config['num_layers'])])
 
